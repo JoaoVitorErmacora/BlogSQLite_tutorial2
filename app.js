@@ -4,6 +4,9 @@ const bodyParser = require("body-parser"); //importa o body-parser
 
 const port = 8000; // porta TCP do servidor HTTP da aplicação
 
+//Variáveis usadads no EJS (padrão)
+let config = { titulo: "", rodape: "" };
+
 const app = express(); //Instância para o uso do Express
 
 // Cria conexão com o banco de dados
@@ -42,20 +45,21 @@ const cadastro = 'vc está na página "Cadastro"<br><a href="/">Voltar</a>';
 app.get("/", (req, res) => {
   // res.send(Home);
   console.log("GET /index");
-  res.render("pages/index", {
-    titulo: "Blog da turma I2HNA - SESI Nova Odessa",
-  });
+
+  config = { titulo: "Blog da turma I2HNA - SESI Nova Odessa", rodape: "" };
+  //config.rodape = "1";
+  res.render("pages/index", config);
   // res.redirect("/cadastro"); // Redireciona para a ROTA cadastro
 });
 
 app.get("/sobre", (req, res) => {
   console.log("GET /sobre");
-  res.render("pages/sobre");
+  res.render("pages/sobre", config);
 });
 
 app.get("/login", (req, res) => {
   console.log("GET /login");
-  res.render("pages/login");
+  res.render("pages/login", config);
 });
 
 app.post("/login", (req, res) => {
@@ -65,19 +69,19 @@ app.post("/login", (req, res) => {
 
 app.get("/dashboard", (req, res) => {
   console.log("GET /dashboard");
-  res.render("pages/dashboard");
+  res.render("pages/dashboard", config);
 });
 
 app.get("/cadastro", (req, res) => {
   console.log("GET /cadastro");
-  res.render("pages/cadastro");
+  res.render("pages/cadastro", config);
 });
 
 app.get("/usuarios", (req, res) => {
   const query = "SELECT * FROM users";
   db.all(query, (err, row) => {
     console.log(`GET /usuarios ${JSON.stringify(row)}`);
-    res.render("pages/usertable");
+    res.render("pages/usertable", config);
   });
 });
 
