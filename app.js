@@ -1,6 +1,7 @@
 const express = require("express"); //importou a classe
 const sqlite3 = require("sqlite3");
 const bodyParser = require("body-parser"); //importa o body-parser
+const session = require("express-session");
 
 const port = 8000; // porta TCP do servidor HTTP da aplicação
 
@@ -15,9 +16,19 @@ const db = new sqlite3.Database("user.db"); //Instâcia para uso do Sqlite3, e u
 db.serialize(() => {
   // Este metodo permite enviar comandos SQL em modo 'sequencial'
   db.run(
-    `CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, email TEXT, celular TEXT, cpf TEXT, rg TEXT)`
+    `CREATE TABLE IF NOT EXISTS users 
+    (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, email TEXT, celular TEXT, cpf TEXT, rg TEXT)`
   );
 });
+
+//configuração para o uso de sessão (cookie) com Express
+app.use(
+  session({
+    secret: "qualquersenha",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 // __dirname é a variavel interna do nodejs que guarda o caminho absolute do projeto, no SO
 // console.log(__dirname + "/static");
