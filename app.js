@@ -75,7 +75,23 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   console.log("POST /login");
-  res.send("Login ainda não implementado");
+  const { username, password } = req.body;
+
+  //consultar o usuario no banco de dados
+  const query = "SELECT * FROM users WHERE username = ? AND password = ?";
+  db.get(query, [username, password], (err, row) => {
+    if (err) throw err;
+
+    //Se usuário válida -> registra a sessão e redireciona para o dashboard
+    if (row) {
+      req.session.loggedin = true;
+      req.session.username = username;
+      res.redirect("/dashboard");
+    } //Se nao envia mensagem de erro (usuario invalido)
+    else {
+      res.send("Usuário inválido");
+    }
+  });
 });
 
 app.get("/dashboard", (req, res) => {
