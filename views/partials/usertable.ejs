@@ -1,22 +1,20 @@
-<thead>
-  <tr>
-    <th scope="col">ID</th>
-    <th scope="col">Nome</th>
-    <th scope="col">Email</th>
-    <th scope="col">Celular</th>
-  </tr>
-</thead>
-
-<% for ( let index = 0; index < 8; index++) { %>
-<p><%= index %></p>
 <table>
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Nome</th>
+      <th scope="col">Email</th>
+      <th scope="col">Celular</th>
+    </tr>
+  </thead>
   <tbody>
+    <% for( let index = 0; index < 9; index++ ) { %> <% if (index % 2 == 0) { %>
     <tr>
       <td><%= index %></td>
       <td>NOME</td>
       <td>EMAIL</td>
       <td>CELULAR</td>
     </tr>
+    <% } %> <% } %>
   </tbody>
 </table>
-<% } %>
