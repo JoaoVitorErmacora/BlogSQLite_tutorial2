@@ -3,7 +3,7 @@ const sqlite3 = require("sqlite3");
 const bodyParser = require("body-parser"); //importa o body-parser
 const session = require("express-session");
 
-const port = 8000; // porta TCP do servidor HTTP da aplicação
+const port = 8001; // porta TCP do servidor HTTP da aplicação
 
 //Variáveis usadads no EJS (padrão)
 let config = { titulo: "", rodape: "" };
@@ -44,6 +44,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Configurar EJS como o motor de visualização
 app.set("view engine", "ejs");
 
+app.get("/", (req, res) => {
+  res.render("pages/index", { ...config, req: req });
+
+  console.log(
+    `${
+      req.session.username
+        ? `User ${req.session.username} logged in from IP ${req.connection.remoteAdress}`
+        : "User not logged in."
+    }`
+  );
+});
 const Home =
   "<a href='/sobre'> Sobre </a><a href='/Login'> Login </a><a href='/cadastro'> Cadastro </a>";
 const Sobre = 'vc está na página "Sobre"<br><a href="/">Voltar</a>';
@@ -59,18 +70,18 @@ app.get("/", (req, res) => {
 
   config = { titulo: "Blog da turma I2HNA - SESI Nova Odessa", rodape: "" };
   //config.rodape = "1";
-  res.render("pages/index", config);
+  res.render("pages/index", { ...config, req: req });
   // res.redirect("/cadastro"); // Redireciona para a ROTA cadastro
 });
 
 app.get("/sobre", (req, res) => {
   console.log("GET /sobre");
-  res.render("pages/sobre", config);
+  res.render("pages/sobre", { ...config, req: req });
 });
 
 app.get("/login", (req, res) => {
   console.log("GET /login");
-  res.render("pages/login", config);
+  res.render("pages/login", { ...config, req: req });
 });
 
 app.post("/login", (req, res) => {
@@ -96,21 +107,46 @@ app.post("/login", (req, res) => {
 
 app.get("/dashboard", (req, res) => {
   console.log("GET /dashboard");
-  res.render("pages/dashboard", config);
+  res.render("pages/dashboard", { ...config, req: req });
 });
 
 app.get("/cadastro", (req, res) => {
   console.log("GET /cadastro");
-  res.render("pages/cadastro", config);
+  config = { titulo: "Blog da turma i2hna - sesi nova odessa", rodape: "" };
+  res.render("pages/cadastro", { ...config, req: req });
 });
+
+// if (req.session.loggedin) {
+//   const query = "SELECT * FROM users";
+
+//   db.all(query, (err, rows) => {
+//     if (err) throw err;
+//     //if (row) {
+//     console.log(rows);
+//     res.render("pages/dashboard", { row: rows, req: req });
+//     //}
+//   });
+// } else {
+//   res.redirect("/login_failed");
+// }
 
 app.get("/usuarios", (req, res) => {
   const query = "SELECT * FROM users";
   db.all(query, (err, row) => {
     console.log(`GET /usuarios ${JSON.stringify(row)}`);
-    res.render("pages/usertable", config);
+    res.render("pages/usertable", { ...config, req: req });
   });
 });
+
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.redirect("/login");
+  });
+});
+
+//  else {
+//   res.redirect ("/login_failed")
+// }
 
 app.post("/cadastro", (req, res) => {
   console.log("POST /cadastro");

@@ -1,10 +1,16 @@
 <header>
   <a href="" class="logo">LOGO</a>
   <nav>
+    <% if(!req.session.loggedin){ %>
     <a href="/">Home</a>
     <a href="/sobre">Sobre</a>
     <a href="/cadastro">Cadastro</a>
     <a href="/login">Login</a>
-    <a href="/dashboard">Dashboard</a>
   </nav>
+  <% } else{ %>
+  <a href="/">Home</a>
+  <a href="/sobre">Sobre</a>
+  <a href="/dashboard">Dashboard</a>
+  <a href="/logout">Sair</a>
+  <% } %>
 </header>
