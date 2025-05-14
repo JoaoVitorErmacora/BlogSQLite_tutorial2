@@ -184,6 +184,13 @@ app.post("/cadastro", (req, res) => {
     }
   });
 });
+
+//Middleware para capturar rotas não existentes
+app.use("*", (req, res) => {
+  //Envia uma resposta de erro 404
+  res.status(404).render("pages/404", { ...config, req: req });
+});
+
 //app.listen() deve ser o último comando da aplicação (app.js)
 app.listen(port, () => {
   console.log(`Servidor sendo executado na porta ${port}!`);
