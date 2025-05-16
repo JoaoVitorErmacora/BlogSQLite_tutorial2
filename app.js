@@ -105,31 +105,30 @@ app.post("/login", (req, res) => {
   });
 });
 
-app.get("/dashboard", (req, res) => {
-  console.log("GET /dashboard");
-  res.render("pages/dashboard", { ...config, req: req });
-});
-
 app.get("/cadastro", (req, res) => {
   console.log("GET /cadastro");
   config = { titulo: "Blog da turma i2hna - sesi nova odessa", rodape: "" };
   res.render("pages/cadastro", { ...config, req: req });
 });
 
-// if (req.session.loggedin) {
-//   const query = "SELECT * FROM users";
+app.get("/dashboard", (req, res) => {
+  console.log("Get/dashboard");
+  console.log(JSON.stringify(config));
 
-//   db.all(query, (err, rows) => {
-//     if (err) throw err;
-//     //if (row) {
-//     console.log(rows);
-//     res.render("pages/dashboard", { row: rows, req: req });
-//     //}
-//   });
-// } else {
-//   res.redirect("/login_failed");
-// }
-
+  if (req.session.loggedin) {
+    db.all("SELECT * FROM users", [], (err, row) => {
+      if (err) throw err;
+      res.render("pages/dashboard", {
+        titulo: "DASHBOARD",
+        dados: row,
+        req: req,
+      });
+    });
+  } else {
+    console.log("Tentativa de acesso à área restrita");
+    res.redirect("/");
+  }
+});
 app.get("/usuarios", (req, res) => {
   const query = "SELECT * FROM users";
   db.all(query, (err, row) => {
