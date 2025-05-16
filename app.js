@@ -90,13 +90,14 @@ app.post("/login", (req, res) => {
 
   //consultar o usuario no banco de dados
   const query = "SELECT * FROM users WHERE username = ? AND password = ?";
-  db.get(query, [username, password], (err, row) => {
+  db.get(query, [username, password, email], (err, row) => {
     if (err) throw err;
 
     //Se usuário válida -> registra a sessão e redireciona para o dashboard
     if (row) {
       req.session.loggedin = true;
       req.session.username = username;
+      req.session.email - email;
       res.redirect("/dashboard");
     } //Se nao envia mensagem de erro (usuario invalido)
     else {
@@ -147,6 +148,14 @@ app.get("/logout", (req, res) => {
 //   res.redirect ("/login_failed")
 // }
 
+app.get("/invalido", (req,res) =>{
+  res.render("pages/invalido", { ...config, req: req});
+})
+
+app.get("/valido", (req,res) =>{
+  res.render("pages/valido", { ...config,req: req});
+})
+
 app.post("/cadastro", (req, res) => {
   console.log("POST /cadastro");
   !req.body
@@ -166,7 +175,7 @@ app.post("/cadastro", (req, res) => {
     if (row) {
       // A variavel 'row' irá retornar os dados do banco de dados,
       // executado atraves do SQL, variavel query
-      res.send("Usuário ja cadastrado, refaça o cadastro");
+      res.send("/invalido");
     } else {
       // 3. Se o usuário não existe no banco cadastrar
       const insertQuery =
@@ -177,7 +186,7 @@ app.post("/cadastro", (req, res) => {
         (err) => {
           // inserir a lógica do INSERT
           if (err) throw err;
-          res.send("Usuário cadastrado com sucesso");
+          res.redirect("/valido");
         }
       );
     }
