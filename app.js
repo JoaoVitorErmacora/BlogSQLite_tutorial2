@@ -112,7 +112,7 @@ app.get("/cadastro", (req, res) => {
 });
 
 app.get("/dashboard", (req, res) => {
-  console.log("Get/dashboard");
+  console.log("Get /dashboard");
   console.log(JSON.stringify(config));
 
   if (req.session.loggedin) {

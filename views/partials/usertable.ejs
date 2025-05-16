@@ -1,3 +1,5 @@
+<% console.log (`usertable.ejs -> DADOS: ${JSON.stringify(dados)}`) %>
+<% if (req.session.loggedin) { %>
 <table>
   <thead>
     <tr>
@@ -9,14 +11,25 @@
     </tr>
   </thead>
   <tbody>
-    <% let index = 1; dados.forEach(user => { %>
-      <tr <%- req.session.username==user.username ? `style="color: white; font-style: bold"` : `` %>>
-        <td><%= user.id %></td>
-        <td><%= user.username %></td>
-        <td><%= user.email %></td>
-        <td><%= user.celular %></td>
-        <td><%= user.password %></td>
-      </tr>
-      <% index++}); %>
+    <% for( let i=0; i < dados.length; i++ ){ %> 
+<tr <%- req.session.username==dados[i].username ? `style="color: #262682 font-style: bold;"` : ``  %>>
+  <td><%= dados[i].id %>/td>
+  <td><%= dados[i].username %></td>
+  <td><%= dados[i].email %></td>
+  <td><%= dados[i].celular %></td>
+  <td><%= dados[i].password %></td>
+</tr>
+      <% }; %>
   </tbody>
+  <tfoot>
+    <tr>
+      <th colspan="5" style="font-size: 16px;"><%= `Usuários registrados: ${dados.length}` %></th>
+    </tr>
+  </tfoot>
 </table>
+<% } else{ %>
+<main style="padding: 2px; text-align: center; border: 10px solid red; background-color: tomato; font-size: 64px; border: radius 150px; ;">
+ACESSO RESTRITO! <br> VOCÊ FOI PARA O SAL! <br> A POLÍCIA FEDERAL IRÁ APARECER NA SUA CASA AMANHÃ <br>
+</main>
+  <% } %>
+
